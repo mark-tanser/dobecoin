@@ -1,0 +1,6 @@
+# dobecoin
+proof-of-work blockchain example
+
+summary to follow shortly...
+coming soon...
+
