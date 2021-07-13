@@ -2,13 +2,13 @@
 .DS_store
 
 # Ignore node_modules folder
-node_modules
+node_modules/
 
 # Ignore all text files
 *.txt
 
 # Ignore files related to API keys
-.env
+keys.js
 
 # Ignore pdf files
 *.pdf
@@ -23,6 +23,10 @@ node_modules
 build/
 client/dist/
 
-# ignore local cache
+# Ignore local cache
 .cache/
+
+# Ignore local environment variables
+env_local.js
+
 

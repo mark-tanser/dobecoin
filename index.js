@@ -6,13 +6,13 @@ const Blockchain = require('./blockchain/index');
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transaction-pool');
 const Wallet = require('./wallet');
-const TransactionMiner = require('./app/transaction-miner');
-
+const TransactionMiner = require('./app/transaction-miner')
+;
 const isDevelopment = process.env.ENV === 'development';
 
 const REDIS_URL = isDevelopment ?
     'redis://127.0.0.1:6379' :
-    'redis://:p29d2a34887fd7d1e8cff8c673c367fe854c78844ac4abf779ef3a328aa3aec0a@ec2-54-146-210-204.compute-1.amazonaws.com:25299'
+    REDIS_PROD_URL;
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = isDevelopment ? 
     `http://localhost:${DEFAULT_PORT}` : 
