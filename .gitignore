@@ -28,5 +28,7 @@ client/dist/
 
 # Ignore local environment variables
 env_local.js
+env.js
+
 
 

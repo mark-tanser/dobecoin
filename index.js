@@ -8,6 +8,7 @@ const TransactionPool = require('./wallet/transaction-pool');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner')
 ;
+const { REDIS_PROD_URL, WEBSITE_URL } = require('./env');
 const isDevelopment = process.env.ENV === 'development';
 
 const REDIS_URL = isDevelopment ?
@@ -16,7 +17,7 @@ const REDIS_URL = isDevelopment ?
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = isDevelopment ? 
     `http://localhost:${DEFAULT_PORT}` : 
-    'https://dobecoin.herokuapp.com';
+    WEBSITE_URL;
 
 const app = express();
 const blockchain = new Blockchain();
