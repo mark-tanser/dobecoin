@@ -8,12 +8,9 @@ const TransactionPool = require('./wallet/transaction-pool');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner')
 ;
-const { REDIS_PROD_URL, WEBSITE_URL } = require('./env');
+const { WEBSITE_URL } = require('./env');
 const isDevelopment = process.env.ENV === 'development';
 
-const REDIS_URL = isDevelopment ?
-    'redis://127.0.0.1:6379' :
-    REDIS_PROD_URL;
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = isDevelopment ? 
     `http://localhost:${DEFAULT_PORT}` : 
@@ -23,7 +20,7 @@ const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-const pubsub = new PubSub({ blockchain, transactionPool, redisUrl: REDIS_URL });
+const pubsub = new PubSub({ blockchain, transactionPool });
 const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
 
 
@@ -180,7 +177,7 @@ if (isDevelopment) {
         wallet: walletBar, recipient: wallet.publicKey, amount: 15
     });
 
-    for (let i=0; i<20; i++) {
+    for (let i=0; i<10; i++) {
         if (i%3 === 0) {
             walletAction();
             walletFooAction();
