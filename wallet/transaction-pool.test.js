@@ -29,8 +29,9 @@ describe('TransactionPool', () => {
         it('returns and existing transaction given an input address', () => {
             transactionPool.setTransaction(transaction);
 
-            expect(transactionPool.transactionMap[transaction.id])
-                .toBe(transaction);
+            expect(
+                transactionPool.existingTransaction({ inputAddress: senderWallet.publicKey })
+            ).toBe(transaction);
         });
     });
 

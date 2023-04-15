@@ -1,9 +1,11 @@
 const PubNub = require('pubnub');
 
+// If you are creating a new blockchain then replace these credentials with your own 
+// keys generated from your own account at https://pubnub.com
 const credentials = {
-  publishKey: 'pub-c-ce2e6a01-0dd0-4b1d-a63d-d97f66f33609',
-  subscribeKey: 'sub-c-2f195dcd-8434-4696-8852-59ad66e8b06d',
-  secretKey: 'sec-c-NTg3MWIyZTItOWI5Yi00YTIxLWI3N2MtMmI3ZDg3ZGRkMzVk'
+  publishKey: 'pub-c-96d86001-d213-44a0-9fc8-56d8477c312f',
+  subscribeKey: 'sub-c-18fa17d7-f0f5-47ca-b809-18ead17f24db',
+  secretKey: 'sec-c-MWE4ZmI3NjYtMGIxMS00MjU2LWFmM2MtMzdmZTQ3ZjkyOTlj'
 };
 
 const CHANNELS = {
@@ -13,9 +15,10 @@ const CHANNELS = {
 };
 
 class PubSub {
-    constructor({ blockchain, transactionPool }) {
+    constructor({ blockchain, transactionPool, wallet }) {
         this.blockchain = blockchain;
         this.transactionPool = transactionPool;
+        this.wallet = wallet;
     
         this.pubnub = new PubNub(credentials);
         this.pubnub.subscribe({ channels: Object.values(CHANNELS) });
@@ -36,7 +39,11 @@ class PubSub {
                 });
                 break;
             case CHANNELS.TRANSACTION:
-                this.transactionPool.setTransaction(parsedMessage);
+                if (!this.transactionPool.existingTransaction({
+                    inputAddress: this.wallet.publicKey
+                })) { 
+                    this.transactionPool.setTransaction(parsedMessage);
+                }
                 break;
             default:
                 return;    
@@ -47,13 +54,13 @@ class PubSub {
         return {
           message: messageObject => {
             const { channel, message } = messageObject;
-    
+            console.log(`Message received. Channel: ${channel}. Message ${message}`);
             this.handleMessage(channel, message);
           }
         };
       }
     
-      publish({ channel, message}) {
+    publish({ channel, message}) {
         this.pubnub.publish({ channel, message });
       }
 

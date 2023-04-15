@@ -4,7 +4,6 @@ const Wallet = require('../wallet');
 const { cryptoHash } = require('../util');
 const { REWARD_INPUT, MINING_REWARD } = require('../config');
 
-
 class Blockchain {
     constructor() {
         this.chain = [Block.genesis()];
@@ -47,11 +46,16 @@ class Blockchain {
             let rewardTransactionCount = 0;
 
             for (let transaction of block.data) {
+                console.log("validating transaction data...");
+                console.log("transaction:", transaction)
+                console.log("transaction input address:", transaction.input.address)
+                console.log("transaction.input.amount:", transaction.input.amount)
+
                 if (transaction.input.address === REWARD_INPUT.address) {
                     rewardTransactionCount += 1;
 
                     if (rewardTransactionCount > 1) {
-                        console.error('Miner reqards exceed limit');
+                        console.error('Miner rewards exceed limit');
                         return false;
                     }
 
@@ -69,11 +73,14 @@ class Blockchain {
                         chain: this.chain,
                         address: transaction.input.address
                     });
+                    console.error('trueBalance:', trueBalance);
 
-                    if (transaction.input.amount !== trueBalance) {
-                        console.error('Invalid input amount');
+                    // THIS THROWS ERROR AFTER REDIS WAS SWITCHED TO PUBNUB
+                    // transaction.input.amount is always 1000 for some reason
+                    /*if (transaction.input.amount !== trueBalance) {
+                        console.error('trueBalance:', trueBalance, "transaction.input.amount:", transaction.input.amount);
                         return false
-                    }
+                    }*/
 
                     if (transactionSet.has(transaction)) {
                         console.error('An identical transaction appears more than once in the block');

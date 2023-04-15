@@ -1,4 +1,4 @@
-//const bodyParser = require('body-parser'); ** bodyParser.json() is DEPRECATED **
+//const bodyParser = require('body-parser'); //** bodyParser.json() is DEPRECATED **
 const express = require('express');
 const request = require('request');
 const path = require('path');
@@ -8,19 +8,32 @@ const TransactionPool = require('./wallet/transaction-pool');
 const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner')
 ;
-const { WEBSITE_URL } = require('./env');
+const { WEBSITE_URL, LOCAL_PORT } = require('./env');
 const isDevelopment = process.env.ENV === 'development';
 
 const DEFAULT_PORT = 3000;
+let PEER_PORT;
+
+if (process.env.GENERATE_PEER_PORT === 'true') {
+    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+}
+
+const PORT = process.env.PORT || LOCAL_PORT || PEER_PORT || DEFAULT_PORT;
+console.log("PORT:", PORT)
+
+let isPeer = false;
+if (PORT === PEER_PORT || PORT === LOCAL_PORT) { isPeer = true };
+
+console.log("isDevelopment?:", isDevelopment)
 const ROOT_NODE_ADDRESS = isDevelopment ? 
-    `http://localhost:${DEFAULT_PORT}` : 
+    `http://localhost:${PORT}` : 
     WEBSITE_URL;
 
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-const pubsub = new PubSub({ blockchain, transactionPool });
+const pubsub = new PubSub({ blockchain, transactionPool, wallet });
 const transactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
 
 
@@ -153,7 +166,7 @@ const syncWithRootState = () => {
     });
 };
 
-if (isDevelopment) {
+if (isDevelopment && !isPeer) {
     const walletFoo = new Wallet();
     const walletBar = new Wallet();
 
@@ -192,15 +205,10 @@ if (isDevelopment) {
 
         transactionMiner.mineTransactions();
     }
+
+    
 }
 
-let PEER_PORT;
-
-if (process.env.GENERATE_PEER_PORT === 'true') {
-    PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
-}
-
-const PORT = process.env.PORT || PEER_PORT || DEFAULT_PORT;
 app.listen(PORT, () => {
     console.log(`listening at localhost:${PORT}`);
 
@@ -208,3 +216,6 @@ app.listen(PORT, () => {
         syncWithRootState();
     }
 });
+
+
+
