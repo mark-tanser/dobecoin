@@ -3,18 +3,20 @@
 
 ## EXAMPLE NODES:
 
-https://dobecoin-example-node-1.herokuapp.com/
-https://dobecoin-example-node-2.herokuapp.com/
-https://dobecoin-example-node-3.herokuapp.com/
+1) https://dobecoin-example-node-1.herokuapp.com/
+2) https://dobecoin-example-node-2.herokuapp.com/
+3) https://dobecoin-example-node-3.herokuapp.com/
 
 
 ## DEPLOY NODE INSTANCE
 
-### Intrusctions
+### Suggested Method
 1) Clone this repo to a local folder
-2) Install Heroku CLI
-3) ....
-4) ....
+2) Initialise git in cloned folder: $ git init
+2) Open/Create Heroku Account & Install Heroku CLI
+3) Create project in heroku: $ heroku create
+4) Push to heroku: $ git push heroku main
+5) Open application: $ heroku open
 
 ## BLOCKCHAIN RULES:
 
